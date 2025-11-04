@@ -1,6 +1,7 @@
 package io.ktor.samples.mpp.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
@@ -30,7 +31,7 @@ class ApplicationApi {
     }
 
     private fun initHttpClient(): HttpClient {
-        val (httpClient, time) = measureTimedValue { HttpClient() }
+        val (httpClient, time) = measureTimedValue { HttpClient(CIO) }
         println("HttpClient initialized in $time")
         return httpClient
     }
