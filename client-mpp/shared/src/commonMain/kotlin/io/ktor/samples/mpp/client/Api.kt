@@ -15,6 +15,7 @@ import kotlin.time.measureTimedValue
 internal expect val ApplicationDispatcher: CoroutineDispatcher
 
 class ApplicationApi {
+    private var httpClientInitializationTime = -1
     private val client: HttpClient = initHttpClient()
 
     private val address = Url("https://api.thecatapi.com/v1/images/search")
@@ -26,13 +27,13 @@ class ApplicationApi {
                 url(address.toString())
             }.bodyAsText()
 
-            callback(result)
+            callback("$result ; init time: $httpClientInitializationTime ms")
         }
     }
 
     private fun initHttpClient(): HttpClient {
         val (httpClient, time) = measureTimedValue { HttpClient(CIO) }
-        println("HttpClient initialized in $time")
+        httpClientInitializationTime = time.inWholeMilliseconds.toInt()
         return httpClient
     }
 }
